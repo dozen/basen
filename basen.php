@@ -1,12 +1,13 @@
 <?php
+
 class Basen {
+
   function __construct() {
-    $charfile = file('char');
-    $this->char = $charfile[0];
-    unset($charfile);
+    $this->char = rtrim(file_get_contents('char'));
     $charset = mb_detect_encoding($this->char);
     mb_internal_encoding($charset);
   }
+
   function encode($value, $base) {
     $result = null;
     $place = floor(log($value, $base)); //桁数を求める(実際の桁数-1)
@@ -19,9 +20,10 @@ class Basen {
     }
     return $result;
   }
+
   function decode($value, $base) {
-    $result = null;
-    $currentplace = null;
+    $result = 0;
+    $currentplace = 0;
     $place = mb_strlen($value) - 1; //桁数を求める
     while ($place >= $currentplace) {
       $pow = pow($base, $place - $currentplace);
@@ -31,4 +33,5 @@ class Basen {
     }
     return $result;
   }
+
 }
