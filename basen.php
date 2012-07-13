@@ -2,13 +2,17 @@
 
 class Basen {
 
-  function __construct() {
-    $this->char = rtrim(file_get_contents('char'));
+  function __construct($file = 'char') {
+    $this->char = rtrim(file_get_contents($file));
     $charset = mb_detect_encoding($this->char);
+    $this->base = mb_strlen($this->char, $charset);
     mb_internal_encoding($charset);
   }
 
-  function encode($value, $base) {
+  function encode($value, $base = 0) {
+    if ($base == 0) {
+      $base = $this->base;
+    }
     $result = null;
     $place = floor(log($value, $base)); //桁数を求める(実際の桁数-1)
     while ($place >= 0) {
@@ -21,7 +25,10 @@ class Basen {
     return $result;
   }
 
-  function decode($value, $base) {
+  function decode($value, $base = 0) {
+    if ($base == 0) {
+      $base = $this->base;
+    }
     $result = 0;
     $currentplace = 0;
     $place = mb_strlen($value) - 1; //桁数を求める
